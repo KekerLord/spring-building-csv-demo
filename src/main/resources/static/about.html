@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section>
+      <a href="/">
+        <button>Home</button>
+      </a>
+    </section>
+    <section>
+      <h3>About</h3>
+      <div class="about-table">
+        <div>First Name</div>
+        <div>Павел</div>
+        <div>Last Name</div>
+        <div>Беляев</div>
+        <div>Group</div>
+        <div>УВА-211</div>
+        <div>Records</div>
+        <p id="records"></p>
+      </div>
+    </section>
+    <script>
+      const records = document.querySelector('#records');
+
+      const getBatteries = async () => {
+        const batteries = await (await fetch('/api/battery')).json();
+        console.log(batteries);
+        if (batteries) records.innerHTML = batteries.length || '';
+      };
+      getBatteries();
+    </script>
+  </body>
+</html>
