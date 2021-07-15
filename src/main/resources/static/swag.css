@@ -1,0 +1,22 @@
+body {
+  background: linear-gradient(30deg, rgb(255, 0, 255), rgb(98, 0, 255));
+  width: 100vh;
+  height: 100vh;
+  margin: auto;
+}
+
+section div,
+section h3,
+section p {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 24pt;
+}
+
+section h3 {
+  display: inline;
+  color: rgb(0, 174, 255);
+  border: 1px solid rgb(0, 174, 255);
+  padding-left: 16px;
+  padding-right: 16px;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
