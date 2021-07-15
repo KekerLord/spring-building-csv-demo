@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Battery extends Entity {
 
   public Battery(@NotBlank String brand, @NotBlank String anode, @NotBlank String cathode, @NotBlank String electrolyte,
-      int capacity, @NotBlank String voltage) {
+      int capacity, int voltage) {
     this.brand = brand;
     this.anode = anode;
     this.cathode = cathode;
@@ -23,26 +23,25 @@ public class Battery extends Entity {
     this.voltage = voltage;
   }
 
-  // Тип собственности
+  // Марка
   @NotBlank
   String brand;
 
-  // Улица
+  // Вещество анода
   @NotBlank
   String anode;
 
-  // Номер дома
+  // Вещество катода
   @NotBlank
   String cathode;
 
-  // Дата сдачи в эксплуатацию
+  // Электролит
   @NotBlank
   String electrolyte;
 
-  // Этажность
+  // Ёмкость
   int capacity;
 
-  // Собственник
-  @NotBlank
-  String voltage;
+  // Напряжение
+  int voltage;
 }
