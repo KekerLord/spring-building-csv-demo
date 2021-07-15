@@ -1,4 +1,4 @@
-# spring-battery-xml-demo
+# spring-battery-csv-demo
 
 ## How to install
 
