@@ -8,36 +8,43 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.example.demo.interfaces.Entity;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-public class XmlDatabase<T extends Entity> {
-  private final XmlMapper xmlMapper = new XmlMapper();
+public class CsvDatabase<T extends Entity> {
+  private final CsvMapper csvMapper;
   private final File dbFile;
 
-  private JavaType type;
+  private Class<T> model;
+  CsvSchema schema;
 
-  public XmlDatabase(String filePath, Class<T> model) {
+  public CsvDatabase(String filePath, Class<T> model) {
+    csvMapper = new CsvMapper();
     this.dbFile = new File(filePath);
-    type = xmlMapper.getTypeFactory().constructParametricType(List.class, model);
+    this.model = model;
+    schema = csvMapper.schemaFor(model);
   }
 
   private void createFile() throws IOException {
     List<T> empty = new ArrayList<>();
 
-    xmlMapper.writeValue(dbFile, empty);
+    csvMapper.writeValue(dbFile, empty);
   }
 
   public Optional<T> findFirst(UUID id) throws IOException {
     Optional<T> result = Optional.empty();
     List<T> rows;
+
     try {
-      rows = xmlMapper.readValue(this.dbFile, type);
-      return rows.stream().filter(b -> b.getId().equals(id)).findFirst();
+      MappingIterator<T> it = csvMapper.readerFor(model).with(schema).readValues(dbFile);
+      rows = it.readAll();
+      result = rows.stream().filter(b -> b.getId().equals(id)).findFirst();
     } catch (IOException e) {
       createFile();
       e.printStackTrace();
     }
+
     return result;
   }
 
@@ -45,7 +52,8 @@ public class XmlDatabase<T extends Entity> {
     List<T> result = new ArrayList<>();
 
     try {
-      List<T> rows = xmlMapper.readValue(this.dbFile, type);
+      MappingIterator<T> it = csvMapper.readerFor(model).with(schema).readValues(dbFile);
+      List<T> rows = it.readAll();
       result = rows;
     } catch (IOException e) {
       createFile();
@@ -57,11 +65,12 @@ public class XmlDatabase<T extends Entity> {
 
   public T save(T entity) throws IOException {
     try {
-      List<T> rows = xmlMapper.readValue(this.dbFile, type);
+      MappingIterator<T> it = csvMapper.readerFor(model).with(schema).readValues(dbFile);
+      List<T> rows = it.readAll();
 
       rows.add(entity);
 
-      xmlMapper.writeValue(dbFile, rows);
+      csvMapper.writer(schema).writeValue(dbFile, rows);
     } catch (IOException e) {
       createFile();
       e.printStackTrace();
@@ -72,11 +81,12 @@ public class XmlDatabase<T extends Entity> {
 
   public void delete(UUID id) throws IOException {
     try {
-      List<T> rows = xmlMapper.readValue(this.dbFile, type);
+      MappingIterator<T> it = csvMapper.readerFor(model).with(schema).readValues(dbFile);
+      List<T> rows = it.readAll();
 
       rows.removeIf(b -> b.getId().equals(id));
 
-      xmlMapper.writeValue(dbFile, rows);
+      csvMapper.writer(schema).writeValue(dbFile, rows);
     } catch (IOException e) {
       createFile();
       e.printStackTrace();

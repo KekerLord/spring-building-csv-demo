@@ -11,7 +11,7 @@
     <section>
       <h3>Backup</h3>
       <form action="/api/backup" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="file" accept=".xml" />
+        <input type="file" name="file" id="file" accept=".csv" />
         <input type="submit" value="Upload" />
       </form>
     </section>
@@ -22,36 +22,36 @@
     </section>
     <section>
       <h3>Create</h3>
-      <form action="/q/building/create" method="get">
+      <form action="/q/battery/create" method="get">
         <div class="form-group">
-          <label for="propertyType">Property type</label>
-          <input type="text" name="propertyType" id="propertyType" />
+          <label for="brand">Property type</label>
+          <input type="text" name="brand" id="brand" />
         </div>
         <div class="form-group">
-          <label for="street">Street</label>
-          <input type="text" name="street" id="street" />
+          <label for="anode">Anode</label>
+          <input type="text" name="anode" id="anode" />
         </div>
         <div class="form-group">
-          <label for="number">Number</label>
-          <input type="text" name="number" id="number" />
+          <label for="cathode">Cathode</label>
+          <input type="text" name="cathode" id="cathode" />
         </div>
         <div class="form-group">
-          <label for="commissioningDate">Commissioning date</label>
-          <input type="text" name="commissioningDate" id="commissioningDate" />
+          <label for="electrolyte">Electrolyte</label>
+          <input type="text" name="electrolyte" id="electrolyte" />
         </div>
         <div class="form-group">
-          <label for="storeysNumber">Storeys number</label>
+          <label for="capacity">Capacity</label>
           <input
             type="number"
-            name="storeysNumber"
-            id="storeysNumber"
-            min="1"
-            value="1"
+            name="capacity"
+            id="capacity"
+            min="0"
+            value="0"
           />
         </div>
         <div class="form-group">
-          <label for="owner">Owner</label>
-          <input type="text" name="owner" id="owner" />
+          <label for="voltage">Voltage</label>
+          <input type="number" name="voltage" id="voltage" min="0" value="0" />
         </div>
         <input type="submit" value="submit" />
       </form>
@@ -61,75 +61,66 @@
         <div class="table-head">
           <div>ID</div>
           <div>Property Type</div>
-          <div>Street</div>
-          <div>Number</div>
+          <div>anode</div>
+          <div>cathode</div>
           <div>Commissioning date</div>
           <div>Storeys number</div>
-          <div>Owner</div>
+          <div>voltage</div>
           <div></div>
         </div>
       </div>
     </section>
     <script>
       const list = document.querySelector('#list');
-      const getBuildings = async () => {
-        const buildings = await (await fetch('/api/building')).json();
-        console.log(buildings);
-        buildings.forEach((building) => {
+      const getBatteries = async () => {
+        const batteries = await (await fetch('/api/battery')).json();
+        console.log(batteries);
+        batteries.forEach((battery) => {
           const row = document.createElement('div');
           row.setAttribute('class', 'table-row');
 
           const id = document.createElement('div');
-          id.appendChild(document.createTextNode(building.id));
+          id.appendChild(document.createTextNode(battery.id));
 
-          const propertyType = document.createElement('div');
-          propertyType.appendChild(
-            document.createTextNode(building.propertyType)
-          );
+          const brand = document.createElement('div');
+          brand.appendChild(document.createTextNode(battery.brand));
 
-          const street = document.createElement('div');
-          street.appendChild(document.createTextNode(building.street));
+          const anode = document.createElement('div');
+          anode.appendChild(document.createTextNode(battery.anode));
 
-          const number = document.createElement('div');
-          number.appendChild(document.createTextNode(building.number));
+          const cathode = document.createElement('div');
+          cathode.appendChild(document.createTextNode(battery.cathode));
 
-          const commissioningDate = document.createElement('div');
-          commissioningDate.appendChild(
-            document.createTextNode(building.commissioningDate)
-          );
+          const electrolyte = document.createElement('div');
+          electrolyte.appendChild(document.createTextNode(battery.electrolyte));
 
-          const storeysNumber = document.createElement('div');
-          storeysNumber.appendChild(
-            document.createTextNode(building.storeysNumber)
-          );
+          const capacity = document.createElement('div');
+          capacity.appendChild(document.createTextNode(battery.capacity));
 
-          const owner = document.createElement('div');
-          owner.appendChild(document.createTextNode(building.owner));
+          const voltage = document.createElement('div');
+          voltage.appendChild(document.createTextNode(battery.voltage));
 
           const del = document.createElement('div');
           const deleteButton = document.createElement('a');
-          deleteButton.setAttribute(
-            'href',
-            `/q/building/delete/${building.id}`
-          );
+          deleteButton.setAttribute('href', `/q/battery/delete/${battery.id}`);
           const button = document.createElement('button');
           button.innerHTML = '❌';
           deleteButton.appendChild(button);
           del.appendChild(deleteButton);
 
           row.appendChild(id);
-          row.appendChild(propertyType);
-          row.appendChild(street);
-          row.appendChild(number);
-          row.appendChild(commissioningDate);
-          row.appendChild(storeysNumber);
-          row.appendChild(owner);
+          row.appendChild(brand);
+          row.appendChild(anode);
+          row.appendChild(cathode);
+          row.appendChild(electrolyte);
+          row.appendChild(capacity);
+          row.appendChild(voltage);
           row.appendChild(del);
 
           list.appendChild(row);
         });
       };
-      getBuildings();
+      getBatteries();
     </script>
   </body>
 </html>

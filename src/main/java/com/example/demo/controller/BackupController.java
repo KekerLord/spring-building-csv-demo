@@ -15,17 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController()
 public class BackupController {
-  final File dbFile = new File("building.xml");
+  final File dbFile = new File("battery.csv");
 
   @GetMapping("/api/backup")
   public void fileDownload(HttpServletResponse response) throws IOException {
-    response.setContentType("application/xml");
+    response.setHeader("Content-disposition", "attachment; filename=backup.csv");
     Files.copy(dbFile.toPath(), response.getOutputStream());
   }
 
   @PostMapping("/api/backup")
   public void fileUpload(@RequestParam("file") MultipartFile file, HttpServletResponse response) throws IOException {
-    if (!file.isEmpty() && "text/xml".equals(file.getContentType())) {
+    if (!file.isEmpty()) {
       Files.copy(file.getInputStream(), dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
