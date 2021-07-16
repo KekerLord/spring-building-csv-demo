@@ -33,7 +33,7 @@
       const getBatteries = async () => {
         const batteries = await (await fetch('/api/battery')).json();
         console.log(batteries);
-        if (batteries) records.innerHTML = batteries.length || '';
+        if (batteries) records.innerHTML = batteries.length;
       };
       getBatteries();
     </script>
